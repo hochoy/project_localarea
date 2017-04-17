@@ -28,11 +28,13 @@ var geocoder_coordinate;
 
 function loadaddress() {
   loadsample(); // temporary hardcoded geocoder response
+
 }
 
 
 // Check if address is within boundary
 function checkwithin() {
+  // geocoder_coordinate = [49.253765, -123.159316]; //positive control
   var iswithin = inBoundary(geocoder_coordinate,boundary1_polygon);
 
   console.log(iswithin);
