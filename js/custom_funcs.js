@@ -10,6 +10,7 @@ function loadkml(){
       var boundary1_polygon = boundary1.geometry.coordinates[0];
       console.log(boundary1);
       console.log("name: " + boundary1_name);
+      console.log(boundary1.geometry.coordinates);
       console.log("polygons: " + boundary1_polygon);
   });
 }

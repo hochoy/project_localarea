@@ -9,8 +9,8 @@ https://catalogue.data.gov.bc.ca/dataset/physical-address-geocoding-web-service/
 
 **geocoord to view**  
 https://rstudio.github.io/leaflet/
-
-**Link: vancouver boundary kml file to geojson **  
+  
+**Link: vancouver boundary kml file to geojson**  
 https://github.com/mapbox/togeojson
 
 
