@@ -34,10 +34,19 @@ function loadaddress() {
 
 // Check if address is within boundary
 function checkwithin() {
-  // geocoder_coordinate = [49.253765, -123.159316]; //positive control
-  var iswithin = inBoundary(geocoder_coordinate,boundary1_polygon);
+  var custom_coord = $('#custom_coord').val();
+  var custom_lnglat_string = custom_coord.split(",");
 
-  console.log(iswithin);
+  if (custom_lnglat_string.length == 2) {
+    var custom_lnglat_num = [Number(custom_lnglat_string[0]),
+                             Number(custom_lnglat_string[1])];
+    geocoder_coordinate = custom_lnglat_num;
+    var iswithin = inBoundary(geocoder_coordinate,boundary1_polygon);
+    
+    console.log(geocoder_coordinate);
+    console.log(iswithin);
+  }
+
 }
 
 
@@ -45,6 +54,7 @@ function checkwithin() {
 function inBoundary(point, vs) {
     // ray-casting algorithm based on
     // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
+    // from https://github.com/substack/point-in-polygon/blob/master/index.js
 
     var x = point[0], y = point[1];
 
