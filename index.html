@@ -13,11 +13,11 @@
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /> -->
 
     <!-- Custom CSS -->
     <link href="css/portfolio-item.css" rel="stylesheet">
 
-    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" /> -->
 
 </head>
 
@@ -70,9 +70,24 @@
 
         <!-- app content -->
         <div id="appframe">
-            <!-- map goes here  -->
-            <label>Step 1: Load local area boundaries (KML file format)</label>
-            <button id="loadkml" type="button" class="btn btn-default btn-block" onclick="loadkml()">Load Sample</button>
+
+
+            <label>Step 1: Load in local area boundaries (KML file format)</label>
+            <ul>
+              <li>1. Upload KML file</li>
+              <li>2. Convert to geojson</li>
+            </ul>
+            <button id="loadkml" type="button" class="btn btn-default btn-block" onclick="loadkml()">Load Boundaries</button>
+            <br />
+
+            <br style="clear:both;" />
+
+            <label>Step 2: Geocode address</label>
+            <ul>
+              <li>1. Type address</li>
+              <li>2. Geocode with DataBC geocoder</li>
+            </ul>
+            <button id="loadaddress" type="button" class="btn btn-default btn-block" onclick="loadaddress()">Load Address</button>
             <br />
 
             <br style="clear:both;" />
@@ -105,8 +120,11 @@
     <!-- KML to geojson script -->
     <script src="js/togeojson.js"></script>
 
+    <!-- TEMP: Hardcoded json in js to overcome local CORS restriction -->
+    <script src="json/sample_geocoder_json.js"></script>
+
     <!-- Custom scripts -->
-    <script src="js/kml_custom.js"></script>
+    <script src="js/custom_funcs.js"></script>
 
 </body>
 

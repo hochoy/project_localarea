@@ -1,10 +1,23 @@
 
-
+// Read in and convert local boundaries into geojson
 function loadkml(){
   $.ajax('kml/cov_localareas.kml').done(function(xml) {
-      console.log(toGeoJSON.kml(xml));
+      var boundaries = toGeoJSON.kml(xml).features;
+      
+      // loop through each feature
+      var boundary1 = boundaries[0];
+      var boundary1_name = boundary1.properties.name;
+      var boundary1_polygon = boundary1.geometry.coordinates[0];
+      console.log("fullitem" + boundary1);
+      console.log("name" + boundary1);
+      console.log("polygons" + boundary1);
   });
 }
+
+// Run DataBC geocoder API on physical address
+// Awaiting apikey. In the meantime, using a hardcoded sample geocoder response.
+// loadaddress();
+//
 
 
 function inBoundary(point, vs) {
