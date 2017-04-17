@@ -1,7 +1,5 @@
-var sample_geocoder_json;
-
-function loadaddress(){
-  sample_geocoder_json = {
+function loadsample(){
+  geocoder_response = {
       "queryAddress": "3553 mayfair avenue",
       "searchTimestamp": "2017-04-16 18:19:45.353",
       "executionTime": 1.041,
@@ -78,6 +76,7 @@ function loadaddress(){
           }
       }]
   };
-
-  console.log(sample_geocoder_json.features[0].geometry.coordinates);
+  geocoder_query = geocoder_response.queryAddress;
+  geocoder_coordinate = geocoder_response.features[0].geometry.coordinates;
+  console.log(geocoder_coordinate);
 }
