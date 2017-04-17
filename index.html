@@ -17,7 +17,7 @@
 
     <!-- Custom CSS -->
     <link href="css/portfolio-item.css" rel="stylesheet">
-
+    <link href="css/custom.css" rel="stylesheet">
 
 </head>
 
@@ -71,11 +71,17 @@
         <!-- app content -->
         <div id="appframe">
 
+            <!-- map -->
+            <div id="map-container" class="col-md-12">
+                <div id="map"></div>
+            </div>
 
+
+            <!-- steps -->
             <label>Step 1: Load in local area boundaries (KML file format)</label>
             <ul>
-              <li>1. Upload KML file</li>
-              <li>2. Convert to geojson</li>
+                <li>1. Upload KML file</li>
+                <li>2. Convert to geojson</li>
             </ul>
             <button id="loadboundaries" type="button" class="btn btn-default btn-block" onclick="loadboundaries()">Load Boundaries</button>
             <br />
@@ -84,9 +90,10 @@
 
             <label>Step 2: Geocode address</label>
             <ul>
-              <li>1. Type address</li>
-              <li>2. Geocode with DataBC geocoder</li>
+                <li>1. Type address</li>
+                <li>2. Geocode with DataBC geocoder</li>
             </ul>
+            <input id="input_address" type="text" class="form-control" value="3553 Mayfair Avenue, Vancouver BC">
             <button id="loadaddress" type="button" class="btn btn-default btn-block" onclick="loadaddress()">Load Address</button>
             <br />
 
@@ -94,7 +101,7 @@
 
 
             <label>Step 3: Check if within</label>
-            <input id="custom_coord" type="text" class="form-control" placeholder="Input custom geocoordinate [long, Lat]">
+            <input id="custom_coord" type="text" class="form-control" value="Input custom geocoordinate [long,lat]" placeholder="Input custom geocoordinate [long, lat]">
             <button id="checkwithin" type="button" class="btn btn-default btn-block" onclick="checkwithin()">Check if address is within boundary 1</button>
             <br />
 
@@ -125,6 +132,9 @@
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
 
+    <!-- googlemapapi -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCDO9dXHv2p7K3EHXwBK3Y1_HHqW4U_Nk&callback=initMap" async defer></script>
+
     <!-- KML to geojson script -->
     <script src="js/togeojson.js"></script>
 
@@ -135,10 +145,9 @@
     <script src="js/custom_funcs.js"></script>
 
     <!-- TEMP positive control -->
-    <script>
-        geocoder_coordinate = [-123.159316,49.253765];
-        console.log(geocoder_coordinate);
-    </script>
+
+
+
 
 </body>
 
