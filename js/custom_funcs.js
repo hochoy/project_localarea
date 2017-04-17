@@ -3,13 +3,13 @@
 function loadkml(){
   $.ajax('kml/cov_localareas.kml').done(function(xml) {
       var boundaries = toGeoJSON.kml(xml).features;
-      
+
       // loop through each feature
       var boundary1 = boundaries[0];
       var boundary1_name = boundary1.properties.name;
       var boundary1_polygon = boundary1.geometry.coordinates[0];
       console.log("fullitem" + boundary1);
-      console.log("name" + boundary1);
+      console.log(boundary1);
       console.log("polygons" + boundary1);
   });
 }
