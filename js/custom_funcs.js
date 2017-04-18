@@ -1,3 +1,56 @@
+
+// create a coordinate array for google maps
+//http://stackoverflow.com/questions/30760731/converting-string-of-coordinates-to-lat-long-array-for-google-maps-api-v3-return
+
+function kmlpolytoArray(vertices) {
+    // create an empty array
+    var polygonCoords = [];
+    // creates a new LatLng
+    var j = 0;
+    var z = j + 1;
+    var co1;
+    var co2;
+    var newLatLng;
+
+    while (z < vertices.length) {
+        if ((j % 2) === 0) {
+            co1 = parseFloat(vertices[z]);
+            //document.write(coordinate[j]);
+            co2 = parseFloat(vertices[j]);
+            //document.write(co2);
+            newLatLng = new google.maps.LatLng(co1, co2);
+
+            polygonCoords.push(newLatLng);
+        } else {
+            co2 = parseFloat(vertices[z]);
+            co1 = parseFloat(vertices[j]);
+            newLatLng = new google.maps.LatLng(co1, co2);
+            polygonCoords.push(newLatLng);
+        }
+        z++;
+        j++;
+    }
+    return polygonCoords;
+}
+
+
+
+// Draw boundary polygons
+var boundary_polygon;
+
+function drawBoundary(vertices) {
+    boundary_polygon = new google.maps.Polygon({
+        paths: vertices,
+        strokeColor: '#FF0000',
+        strokeOpacity: 0.8,
+        strokeWeight: 3,
+        fillColor: '#FF0000',
+        fillOpacity: 0.35
+    });
+    boundary_polygon.setMap(map);
+}
+
+
 // Load googlemap
 var map;
 
@@ -35,9 +88,9 @@ function codeAddress(input_address) {
 
             // remove existing markers https://developers.google.com/maps/documentation/javascript/examples/marker-remove
             if (marker !== undefined) {
-              marker.setMap(null);
+                marker.setMap(null);
             }
-            
+
             // centre map on address coordinates
             map.setCenter(results[0].geometry.location);
             marker = new google.maps.Marker({
@@ -47,10 +100,10 @@ function codeAddress(input_address) {
 
             // save the coordinates
             geocode_results = results[0].geometry.location;
-            geocode_coords = [geocode_results.lng(),geocode_results.lat()];
+            geocode_coords = [geocode_results.lng(), geocode_results.lat()];
 
             // change step 3 text input value to new geocode
-            $('#custom_coord').attr('value',geocode_coords);
+            $('#custom_coord').attr('value', geocode_coords);
 
         } else {
             alert('Geocode was not successful for the following reason: ' + status);
@@ -63,7 +116,7 @@ function codeAddress(input_address) {
 var boundaries;
 var boundary1;
 var boundary1_name;
-var boundary1_polygon;
+var boundary1_vertices;
 
 function loadboundaries() {
     $.ajax('kml/cov_localareas.kml').done(function(xml) {
@@ -73,10 +126,10 @@ function loadboundaries() {
         // FIX: loop through each feature
         boundary1 = boundaries[0];
         boundary1_name = boundary1.properties.name;
-        boundary1_polygon = boundary1.geometry.coordinates[0];
+        boundary1_vertices = boundary1.geometry.coordinates[0];
         console.log(boundary1);
         console.log(boundary1_name);
-        console.log(boundary1_polygon);
+        console.log(boundary1_vertices);
     });
 }
 
@@ -101,9 +154,9 @@ function loadaddress() {
 function checkwithin() {
 
     // check boundary polygons
-    if (boundary1_polygon === undefined) {
-      alert("Boundaries not loaded");
-      return false;
+    if (boundary1_vertices === undefined) {
+        alert("Boundaries not loaded");
+        return false;
     }
 
     // extract address geocoordinate
@@ -116,13 +169,13 @@ function checkwithin() {
             Number(custom_lnglat_string[1])
         ];
         geocoder_coordinate = custom_lnglat_num;
-        var iswithin = inBoundary(geocoder_coordinate, boundary1_polygon);
+        var iswithin = inBoundary(geocoder_coordinate, boundary1_vertices);
 
         console.log(geocoder_coordinate);
         console.log(iswithin);
 
     } else {
-      alert("Please input a valid geocoordinate");
+        alert("Please input a valid geocoordinate");
     }
 }
 
