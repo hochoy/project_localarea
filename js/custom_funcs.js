@@ -1,53 +1,26 @@
 
-// create a coordinate array for google maps
-//http://stackoverflow.com/questions/30760731/converting-string-of-coordinates-to-lat-long-array-for-google-maps-api-v3-return
 
-function kmlpolytoArray(vertices) {
-    // create an empty array
-    var polygonCoords = [];
-    // creates a new LatLng
-    var j = 0;
-    var z = j + 1;
-    var co1;
-    var co2;
-    var newLatLng;
+//http://stackoverflow.com/questions/27628938/using-google-map-javascript-api-to-render-a-geojson-polygon-overlay-from-javascr
 
-    while (z < vertices.length) {
-        if ((j % 2) === 0) {
-            co1 = parseFloat(vertices[z]);
-            //document.write(coordinate[j]);
-            co2 = parseFloat(vertices[j]);
-            //document.write(co2);
-            newLatLng = new google.maps.LatLng(co1, co2);
+function drawBoundary() {
+  var data = {
+    type: "Feature",
+    geometry: boundaries[0]
+    // {
+    //   "type": "Polygon",
+    //   "coordinates": [
+    //     [
+    //       [-73.974228, 40.75597],
+    //       [-73.983841, 40.742931],
+    //       [-74.008133, 40.75307500000001],
+    //       [-73.998131, 40.765915],
+    //       [-73.974228, 40.75597]
+    //     ]
+    //   ]
+    // }
+  };
 
-            polygonCoords.push(newLatLng);
-        } else {
-            co2 = parseFloat(vertices[z]);
-            co1 = parseFloat(vertices[j]);
-            newLatLng = new google.maps.LatLng(co1, co2);
-            polygonCoords.push(newLatLng);
-        }
-        z++;
-        j++;
-    }
-    return polygonCoords;
-}
-
-
-
-// Draw boundary polygons
-var boundary_polygon;
-
-function drawBoundary(vertices) {
-    boundary_polygon = new google.maps.Polygon({
-        paths: vertices,
-        strokeColor: '#FF0000',
-        strokeOpacity: 0.8,
-        strokeWeight: 3,
-        fillColor: '#FF0000',
-        fillOpacity: 0.35
-    });
-    boundary_polygon.setMap(map);
+  map.data.addGeoJson(data);
 }
 
 
@@ -202,3 +175,55 @@ function inBoundary(point, vs) {
 
     return inside;
 }
+
+
+//
+// // create a coordinate array for google maps
+// //http://stackoverflow.com/questions/30760731/converting-string-of-coordinates-to-lat-long-array-for-google-maps-api-v3-return
+//
+// function kmlpolytoArray(vertices) {
+//     // create an empty array
+//     var polygonCoords = [];
+//     // creates a new LatLng
+//     var j = 0;
+//     var z = j + 1;
+//     var co1;
+//     var co2;
+//     var newLatLng;
+//
+//     while (z < vertices.length) {
+//         if ((j % 2) === 0) {
+//             co1 = parseFloat(vertices[z]);
+//             //document.write(coordinate[j]);
+//             co2 = parseFloat(vertices[j]);
+//             //document.write(co2);
+//             newLatLng = new google.maps.LatLng(co1, co2);
+//
+//             polygonCoords.push(newLatLng);
+//         } else {
+//             co2 = parseFloat(vertices[z]);
+//             co1 = parseFloat(vertices[j]);
+//             newLatLng = new google.maps.LatLng(co1, co2);
+//             polygonCoords.push(newLatLng);
+//         }
+//         z++;
+//         j++;
+//     }
+//     return polygonCoords;
+// }
+
+//
+// // Draw boundary polygons
+// var boundary_polygon;
+//
+// function drawBoundary(vertices) {
+//     boundary_polygon = new google.maps.Polygon({
+//         paths: vertices,
+//         strokeColor: '#FF0000',
+//         strokeOpacity: 0.8,
+//         strokeWeight: 3,
+//         fillColor: '#FF0000',
+//         fillOpacity: 0.35
+//     });
+//     boundary_polygon.setMap(map);
+// }
