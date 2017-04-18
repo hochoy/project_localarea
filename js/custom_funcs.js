@@ -1,26 +1,27 @@
 
 
 //http://stackoverflow.com/questions/27628938/using-google-map-javascript-api-to-render-a-geojson-polygon-overlay-from-javascr
+//https://developers.google.com/maps/documentation/javascript/datalayer
 
 function drawBoundary() {
-  var data = {
-    type: "Feature",
-    geometry: boundaries[0]
-    // {
+  var data = boundaries[0];
+  // var data = {
+    // type: "Feature",
+    // geometry:{
     //   "type": "Polygon",
     //   "coordinates": [
     //     [
-    //       [-73.974228, 40.75597],
-    //       [-73.983841, 40.742931],
-    //       [-74.008133, 40.75307500000001],
-    //       [-73.998131, 40.765915],
-    //       [-73.974228, 40.75597]
+    //       [-123.18378569999999,49.23713],
+    //       [-123.20,49.24],
+    //       [-123.190302304,49.2600],
+    //       [-123.18378569999999,49.23713]
     //     ]
     //   ]
     // }
-  };
+  // };
 
   map.data.addGeoJson(data);
+  console.log("try draw");
 }
 
 
