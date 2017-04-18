@@ -23,23 +23,32 @@ function initGeocoder() {
 
 // Run geocoder to code an address
 var address_coords;
+var marker;
 
 function codeAddress(input_address) {
 
-    // Run google geocoding
+    // run google geocoding
     geocoder.geocode({
         'address': input_address
     }, function(results, status) {
         if (status == 'OK') {
+
+            // remove existing markers https://developers.google.com/maps/documentation/javascript/examples/marker-remove
+            if (marker !== undefined) {
+              marker.setMap(null);
+            }
+            
+            // centre map on address coordinates
             map.setCenter(results[0].geometry.location);
-            var marker = new google.maps.Marker({
+            marker = new google.maps.Marker({
                 map: map,
                 position: results[0].geometry.location
             });
-            // save the geocode
+
+            // save the coordinates
             geocode_results = results[0].geometry.location;
             geocode_coords = [geocode_results.lng(),geocode_results.lat()];
-            
+
             // change step 3 text input value to new geocode
             $('#custom_coord').attr('value',geocode_coords);
 
