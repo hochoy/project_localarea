@@ -92,11 +92,13 @@ var boundary1_vertices;
 
 
 function loadboundaries() {
-    $.ajax('kml/cov_localareas.kml').done(function(xml) {
-    // $.get('https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml').done(function(xml) {
+    // $.ajax('kml/cov_localareas.kml').done(function(xml) {
+    $.get('https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml').done(function(xml) {
         // convert kml to geojson
         console.log(xml);
-        boundaries = toGeoJSON.kml(xml).features;
+        var temp_xml = $.parseXML(xml);
+        console.log(temp_xml);
+        boundaries = toGeoJSON.kml(temp_xml).features;
 
         // FIX: loop through each feature
         boundary1 = boundaries[0];
@@ -105,8 +107,7 @@ function loadboundaries() {
         console.log(boundary1);
         console.log(boundary1_name);
         console.log(boundary1_vertices);
-        // draw the boundary once loaded
-        drawBoundary();
+
     });
 }
 
