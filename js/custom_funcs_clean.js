@@ -40,7 +40,7 @@ function loadAddress() {
     curr_address = $("#input_address").val();
 
     // geocode the address using google geocoder
-    codeAddress(curr_address, function(locations, status) {
+    geocodeAddress(curr_address, function(locations, status) {
 
         if (status == 'OK') {
             // extract the best-hit google location (special google object) from the google result
@@ -72,7 +72,7 @@ function removeExistMarker(marker_) {
     }
 }
 
-function codeAddress(address_, callback) {
+function geocodeAddress(address_, callback) {
 
     // check to see if google geocoder is present
     if (curr_geocoder === undefined) {
