@@ -1,11 +1,9 @@
-
-
 //http://stackoverflow.com/questions/27628938/using-google-map-javascript-api-to-render-a-geojson-polygon-overlay-from-javascr
 //https://developers.google.com/maps/documentation/javascript/datalayer
 
 function drawBoundary() {
-  var data = boundaries[0];
-  // var data = {
+    var data = boundaries[0];
+    // var data = {
     // type: "Feature",
     // geometry:{
     //   "type": "Polygon",
@@ -18,10 +16,10 @@ function drawBoundary() {
     //     ]
     //   ]
     // }
-  // };
+    // };
 
-  map.data.addGeoJson(data);
-  console.log("try draw");
+    map.data.addGeoJson(data);
+    console.log("try draw");
 }
 
 
@@ -92,8 +90,10 @@ var boundary1;
 var boundary1_name;
 var boundary1_vertices;
 
+
 function loadboundaries() {
-    $.ajax('kml/cov_localareas.kml').done(function(xml) {
+    // $.ajax('kml/cov_localareas.kml').done(function(xml) {
+    $.ajax('https: //raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml').done(function(xml) {
         // convert kml to geojson
         boundaries = toGeoJSON.kml(xml).features;
 
