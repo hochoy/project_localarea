@@ -5,6 +5,7 @@ var curr_geocoder; // the google geocoder
 function googleMap_callbacks() {
     curr_map = initMap(lat_ = 49.262081, lng_ = -123.125886, zoom_ = 12);
     curr_geocoder = initGeocoder();
+    loadboundaries();
 }
 
 // return a google map
@@ -33,11 +34,12 @@ var geocode_coords; // the coordinates from the geocoded address
 
 
 function loadAddress() {
-    // remove any existing map markers
-    removeExistMarker(marker_ = curr_marker);
 
     // get the address from an input box
     curr_address = $("#input_address").val();
+
+    // remove any existing map markers
+    removeExistMarker(marker_ = curr_marker);
 
     // geocode the address using google geocoder
     geocodeAddress(curr_address, function(locations, status) {
@@ -96,21 +98,25 @@ function newMarker(map_, goolocation_, marker_) {
         map: map_,
         position: goolocation_
     });
+    curr_marker = marker_;
 }
 
 
-// Read in and convert local boundaries into geojson
+
+// 3. Read in and convert local boundaries into geojson
 var boundaries;
 
 function loadboundaries() {
-
-    // Request xml as string from github raw xml page
-    $.get('https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml').done(function(xml) {
+    // Get kml link from step 1 input box
+    var kml_link = $('#kml_link').val();
+    console.log(kml_link);
+    // Request kml as string from link
+    $.get(kml_link).done(function(xml) {
         // convert kml string to xml document
         var temp_xml = $.parseXML(xml);
         // convert xml document to geojson object and extract features
-        boundaries = toGeoJSON.kml(temp_xml).features;
-
+        var temp_boundaries = toGeoJSON.kml(temp_xml).features;
+        return temp_boundaries;
     });
 }
 
@@ -122,14 +128,10 @@ function loadboundaries() {
 // console.log(boundary1_name);
 // console.log(boundary1_vertices);
 
-// Run DataBC geocoder API on physical address
-// Awaiting apikey. In the meantime, using google geocoder
-var geocoder_query;
-var geocoder_response;
-var geocoder_coordinate;
 
 
-
+// var geocoder_coordinate;
+var search_coords;
 
 // Check if address is within boundary
 function checkwithin() {

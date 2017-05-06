@@ -83,6 +83,7 @@
                 <li>1. Upload KML file</li>
                 <li>2. Convert to geojson</li>
             </ul>
+            <input id="kml_link" type="text" class="form-control" value="https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml" placeholder="https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml">
             <button id="loadboundaries" type="button" class="btn btn-default btn-block" onclick="loadboundaries()">Load Boundaries</button>
             <br />
 
@@ -93,7 +94,7 @@
                 <li>1. Type address</li>
                 <li>2. Geocode with DataBC geocoder</li>
             </ul>
-            <input id="input_address" type="text" class="form-control" value="3553 Mayfair Avenue, Vancouver BC">
+            <input id="input_address" type="text" class="form-control" value="3553 Mayfair Avenue, Vancouver BC" placeholder="Input address here">
             <button id="loadaddress" type="button" class="btn btn-default btn-block" onclick="loadAddress()">Load Address</button>
             <br />
 
