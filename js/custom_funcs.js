@@ -1,160 +1,194 @@
-//http://stackoverflow.com/questions/27628938/using-google-map-javascript-api-to-render-a-geojson-polygon-overlay-from-javascr
-//https://developers.google.com/maps/documentation/javascript/datalayer
+// 1. Load googlemap
+var curr_map; // the google map
+var curr_geocoder; // the google geocoder
 
-function drawBoundary() {
-    var data = boundaries[0];
-    // var data = {
-    // type: "Feature",
-    // geometry:{
-    //   "type": "Polygon",
-    //   "coordinates": [
-    //     [
-    //       [-123.18378569999999,49.23713],
-    //       [-123.20,49.24],
-    //       [-123.190302304,49.2600],
-    //       [-123.18378569999999,49.23713]
-    //     ]
-    //   ]
-    // }
-    // };
-
-    map.data.addGeoJson(data);
-    console.log("try draw");
+function googleMap_callbacks() {
+    curr_map = initMap(lat_ = 49.262081, lng_ = -123.125886, zoom_ = 12);
+    curr_geocoder = initGeocoder();
+    loadBoundaries();
 }
 
-
-// Load googlemap
-var map;
-
-function initMap() {
-    map = new google.maps.Map(document.getElementById('map'), {
+// return a google map
+function initMap(lat_, lng_, zoom_) {
+    return new google.maps.Map(document.getElementById('map'), {
         center: {
-            lat: 49.262081,
-            lng: -123.125886
+            lat: lat_,
+            lng: lng_
         },
-        zoom: 12
+        zoom: zoom_
     });
-
-    initGeocoder();
 }
 
-// Load google geocoder
-var geocoder;
-
+// return a google geocoder
 function initGeocoder() {
-    geocoder = new google.maps.Geocoder();
+    return new google.maps.Geocoder();
 }
 
 
-// Run geocoder to code an address
-var address_coords;
-var marker;
 
-function codeAddress(input_address) {
+// 2. Geocode an address
+var curr_address; // the current address being searched
+var curr_marker; // the current marker on google map
+var geocode_results; // all results from the geocoded address
+var geocode_coord; // the coordinates from the geocoded address
 
-    // run google geocoding
-    geocoder.geocode({
-        'address': input_address
-    }, function(results, status) {
+
+function loadAddress() {
+
+    // get the address from an input box
+    curr_address = $("#input_address").val();
+
+    // remove any existing map markers
+    removeExistMarker(marker_ = curr_marker);
+
+    // remove any drawn boundaries
+    removeExistBoundary(map_ = curr_map, boundary_ = curr_boundary);
+
+    // geocode the address using google geocoder
+    geocodeAddress(curr_address, function(locations, status) {
+
         if (status == 'OK') {
+            // extract the best-hit google location (special google object) from the google result
+            var best_googlehit = locations[0];
+            var goolocation = best_googlehit.geometry.location;
 
-            // remove existing markers https://developers.google.com/maps/documentation/javascript/examples/marker-remove
-            if (marker !== undefined) {
-                marker.setMap(null);
-            }
-
-            // centre map on address coordinates
-            map.setCenter(results[0].geometry.location);
-            marker = new google.maps.Marker({
-                map: map,
-                position: results[0].geometry.location
-            });
-
-            // save the coordinates
-            geocode_results = results[0].geometry.location;
-            geocode_coords = [geocode_results.lng(), geocode_results.lat()];
-
-            // change step 3 text input value to new geocode
-            $('#custom_coord').attr('value', geocode_coords);
+            // centre the map to the google location
+            centreMap(map_ = curr_map, goolocation_ = goolocation);
+            // create a new google map marker at the google location
+            newMarker(map_ = curr_map, goolocation_ = goolocation, marker_ = curr_marker);
+            // extract a simpler coordinate array from the google location
+            geocode_coord = [goolocation.lng(), goolocation.lat()];
+            // set the value for step 3's text input to the coordinates
+            $('#search_coord').attr('value', geocode_coord);
 
         } else {
             alert('Geocode was not successful for the following reason: ' + status);
+            return "geocoding failed";
         }
+
     });
+
+}
+
+// remove existing markers https://developers.google.com/maps/documentation/javascript/examples/marker-remove
+function removeExistMarker(marker_) {
+    if (marker_ !== undefined) {
+        marker_.setMap(null);
+    }
+}
+
+function geocodeAddress(address_, callback) {
+
+    // check to see if google geocoder is present
+    if (curr_geocoder === undefined) {
+        alert("Geocoder not set!");
+    } else {
+        // run google geocoding and return two variables in the callback
+        curr_geocoder.geocode({
+            'address': address_
+        }, function(locations, status) {
+            callback(locations, status);
+        });
+    }
+}
+
+function centreMap(map_, goolocation_) {
+    map_.setCenter(goolocation_);
+}
+
+function newMarker(map_, goolocation_, marker_) {
+    marker_ = new google.maps.Marker({
+        map: map_,
+        position: goolocation_
+    });
+    curr_marker = marker_;
 }
 
 
-// Read in and convert local boundaries into geojson
+
+// 3. Read in and convert local boundaries into geojson
 var boundaries;
-var boundary1;
-var boundary1_name;
-var boundary1_vertices;
 
-
-function loadboundaries() {
-    // $.ajax('kml/cov_localareas.kml').done(function(xml) {
-    // Request xml as string from github raw xml page
-    $.get('https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml').done(function(xml) {
+function loadBoundaries() {
+    // Get kml link from step 1 input box
+    var kml_link = $('#kml_link').val();
+    console.log(kml_link);
+    // Request kml as string from link
+    $.get(kml_link).done(function(xml) {
         // convert kml string to xml document
         var temp_xml = $.parseXML(xml);
         // convert xml document to geojson object and extract features
-        boundaries = toGeoJSON.kml(temp_xml).features;
-
-        // FIX: loop through each feature
-        boundary1 = boundaries[0];
-        boundary1_name = boundary1.properties.name;
-        boundary1_vertices = boundary1.geometry.coordinates[0];
-        console.log(boundary1);
-        console.log(boundary1_name);
-        console.log(boundary1_vertices);
-
+        var temp_boundaries = toGeoJSON.kml(temp_xml).features;
+        //output boundaries
+        boundaries = temp_boundaries;
+        return temp_boundaries;
     });
 }
 
-// Run DataBC geocoder API on physical address
-// Awaiting apikey. In the meantime, using google geocoder
-var geocoder_query;
-var geocoder_response;
-var geocoder_coordinate;
-
-function loadaddress() {
-    // loadsample(); // temporary hardcoded geocoder response from DataBC
-    // TEMP: Use google's geocoding with the following key:
-
-    // Grab input address
-    var input_address = $("#input_address").val();
-    // Call geocoding function
-    codeAddress(input_address);
-}
 
 
-// Check if address is within boundary
-function checkwithin() {
+// 4. Find the neighbourhood using the search/query coordinate and the loaded neighbourhood boundaries
+var search_coord;
+var result_neighbourhoods;
+var result_vertices;
 
-    // check boundary polygons
-    if (boundary1_vertices === undefined) {
-        alert("Boundaries not loaded");
-        return false;
-    }
+function findHood() {
+    // parse coord from coordinate input box at step 3
+    search_coord_str = $('#search_coord').val().split(",");
+    search_coord = search_coord_str.map(Number);
 
-    // extract address geocoordinate
-    var custom_coord = $('#custom_coord').val();
-    var custom_lnglat_string = custom_coord.split(",");
+    // check to see if coordinate is valid
+    if (search_coord.length == 2 && typeof search_coord[0] == 'number') {
 
-    // check if coordinate is valid (comma-separated string should split into array of length 2)
-    if (custom_lnglat_string.length == 2) {
-        var custom_lnglat_num = [Number(custom_lnglat_string[0]),
-            Number(custom_lnglat_string[1])
-        ];
-        geocoder_coordinate = custom_lnglat_num;
-        var iswithin = inBoundary(geocoder_coordinate, boundary1_vertices);
+        // loop through all boundaries to find the neighbourhood the coordinate belongs in
+        search_results = loopSearch(search_coord, boundaries, first = true);
+        result_neighbourhoods = search_results.neighbourhoods; // names
+        result_vertices = search_results.vertices[0]; // polygon corner coordinates
+        result_boundaryobj = search_results.boundaryobj[0]; // google's boundary object (used in drawBoundary for drawing)
 
-        console.log(geocoder_coordinate);
-        console.log(iswithin);
+        // assign the neighbourhood to the final output
+        // $('#neighbourhood').attr('val', result_neighbourhoods);
+        $('#neighbourhood').text(result_neighbourhoods);
+
+        // draw the neighbourhood boundary if there's only one clear neighbourhood
+        if (result_neighbourhoods.length == 1) {
+            drawBoundary(curr_map, result_boundaryobj);
+        } else {
+            alert("More than 2 neighbourhoods were detected!");
+        }
 
     } else {
         alert("Please input a valid geocoordinate");
     }
+
+
+}
+
+// Check if address is within boundary
+function loopSearch(search_coord_, boundaries_, first_) {
+
+    // create empty search result object
+    var searchResult = {};
+    searchResult.neighbourhoods = []; // names
+    searchResult.vertices = []; // polygon vertices
+    searchResult.boundaryobj = []; // google's boundary object (used for drawing boundary at drawBoundary)
+
+    for (var i = 0; i < boundaries_.length; i++) {
+
+        // extract neighbourhood names and vertices (corners)
+        boundary_name = boundaries_[i].properties.name;
+        boundary_vertices = boundaries_[i].geometry.coordinates[0];
+
+        // check to see if coordinate is within the polygon (using vertices to outline the polygon)
+        var isWithin = inBoundary(search_coord_, boundary_vertices);
+        if (isWithin) {
+            searchResult.neighbourhoods.push(boundary_name);
+            searchResult.vertices.push(boundary_vertices);
+            searchResult.boundaryobj.push(boundaries_[i]);
+        }
+    }
+
+    return searchResult;
 }
 
 
@@ -181,54 +215,26 @@ function inBoundary(point, vs) {
     return inside;
 }
 
+var curr_boundary;
 
-//
-// // create a coordinate array for google maps
-// //http://stackoverflow.com/questions/30760731/converting-string-of-coordinates-to-lat-long-array-for-google-maps-api-v3-return
-//
-// function kmlpolytoArray(vertices) {
-//     // create an empty array
-//     var polygonCoords = [];
-//     // creates a new LatLng
-//     var j = 0;
-//     var z = j + 1;
-//     var co1;
-//     var co2;
-//     var newLatLng;
-//
-//     while (z < vertices.length) {
-//         if ((j % 2) === 0) {
-//             co1 = parseFloat(vertices[z]);
-//             //document.write(coordinate[j]);
-//             co2 = parseFloat(vertices[j]);
-//             //document.write(co2);
-//             newLatLng = new google.maps.LatLng(co1, co2);
-//
-//             polygonCoords.push(newLatLng);
-//         } else {
-//             co2 = parseFloat(vertices[z]);
-//             co1 = parseFloat(vertices[j]);
-//             newLatLng = new google.maps.LatLng(co1, co2);
-//             polygonCoords.push(newLatLng);
-//         }
-//         z++;
-//         j++;
-//     }
-//     return polygonCoords;
-// }
+function drawBoundary(map_, vertices_) {
 
-//
-// // Draw boundary polygons
-// var boundary_polygon;
-//
-// function drawBoundary(vertices) {
-//     boundary_polygon = new google.maps.Polygon({
-//         paths: vertices,
-//         strokeColor: '#FF0000',
-//         strokeOpacity: 0.8,
-//         strokeWeight: 3,
-//         fillColor: '#FF0000',
-//         fillOpacity: 0.35
-//     });
-//     boundary_polygon.setMap(map);
-// }
+    var data = vertices_;
+    curr_boundary = map_.data.addGeoJson(data);
+
+    map_.data.setStyle({
+        fillColor: 'green',
+        strokeWeight: 1
+    });
+
+}
+
+// remove existing markers https://developers.google.com/maps/documentation/javascript/examples/marker-remove
+function removeExistBoundary(map_, boundary_) {
+    if (boundary_ !== undefined) {
+        map_.data.forEach(function(feature) {
+            map_.data.remove(feature);
+        });
+
+    }
+}
