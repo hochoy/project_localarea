@@ -104,6 +104,8 @@ function loadboundaries() {
         console.log(boundary1);
         console.log(boundary1_name);
         console.log(boundary1_vertices);
+        // draw the boundary once loaded
+        drawBoundary();
     });
 }
 
@@ -115,7 +117,7 @@ var geocoder_coordinate;
 
 function loadaddress() {
     // loadsample(); // temporary hardcoded geocoder response from DataBC
-    // TEMP: Use google's geocoding with the following key: AIzaSyD7umsv0jSZnz_sGO-RWynAxIsWe0g2srA
+    // TEMP: Use google's geocoding with the following key:
 
     // Grab input address
     var input_address = $("#input_address").val();
