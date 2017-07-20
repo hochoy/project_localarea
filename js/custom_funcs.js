@@ -6,6 +6,8 @@ function googleMap_callbacks() {
     curr_map = initMap(lat_ = 49.262081, lng_ = -123.125886, zoom_ = 12);
     curr_geocoder = initGeocoder();
     loadBoundaries();
+    loadAddress(findHood);
+    //findHood() //geocode has to finish running first before using a callback to run findHood
 }
 
 // return a google map
@@ -33,8 +35,11 @@ var geocode_results; // all results from the geocoded address
 var geocode_coord; // the coordinates from the geocoded address
 
 
-function loadAddress() {
+function loadAddress(extra_callback) {
 
+    if(typeof extra_callback === 'undefined'){
+      extra_callback = function(){};
+    }
     // get the address from an input box
     curr_address = $("#input_address").val();
 
@@ -68,7 +73,9 @@ function loadAddress() {
             return "geocoding failed";
         }
 
-    });
+    },
+  extra_callback
+);
 
 }
 
@@ -79,7 +86,7 @@ function removeExistMarker(marker_) {
     }
 }
 
-function geocodeAddress(address_, callback) {
+function geocodeAddress(address_, callback, callback2) {
 
     // check to see if google geocoder is present
     if (curr_geocoder === undefined) {
@@ -90,6 +97,7 @@ function geocodeAddress(address_, callback) {
             'address': address_
         }, function(locations, status) {
             callback(locations, status);
+            callback2();
         });
     }
 }
