@@ -60,6 +60,8 @@ function loadAddress() {
             geocode_coord = [goolocation.lng(), goolocation.lat()];
             // set the value for step 3's text input to the coordinates
             $('#search_coord').attr('value', geocode_coord);
+            // alert the user
+            alert("Address geocoded!");
 
         } else {
             alert('Geocode was not successful for the following reason: ' + status);
@@ -123,6 +125,8 @@ function loadBoundaries() {
         boundaries = temp_boundaries;
         return temp_boundaries;
     });
+
+    alert("Boundaries loaded!");
 }
 
 
@@ -153,8 +157,9 @@ function findHood() {
         // draw the neighbourhood boundary if there's only one clear neighbourhood
         if (result_neighbourhoods.length == 1) {
             drawBoundary(curr_map, result_boundaryobj);
+            alert("Local area detected successfully!");
         } else {
-            alert("More than 2 neighbourhoods were detected!");
+            alert("Error: More than 2 neighbourhoods were detected!");
         }
 
     } else {
