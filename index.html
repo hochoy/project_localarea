@@ -67,56 +67,62 @@
         </div>
         <!-- /.row -->
 
+        <!-- The App -->
+        <div class="row">
+            <div class="col-sm-6">
 
-        <!-- app content -->
-        <div id="appframe">
+              <!-- The data loading steps (left side)-->
+              <label>Step 1: Load in local area boundaries (KML file format)</label>
+              <br/>
+              <small>The local area boundaries.KML file can be found at the <a href="http://data.vancouver.ca/datacatalogue/localAreaBoundary.htm">
+                  City of Vancouver Open Data portal</a>
+              </small>
+              
+              <!-- City of Vancouver open data portal is not set up for CORS -->
+              <!-- <input id="kml_link" type="text" class="form-control" value="http://data.vancouver.ca/download/kml/cov_localareas.kml"> -->
+              <input id="kml_link" type="text" class="form-control" value="https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml" placeholder="https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml">
+              <button id="loadboundaries" type="button" class="btn btn-default btn-block" onclick="loadBoundaries()">Load Boundaries</button>
+              <br />
 
-            <!-- map -->
-            <div id="map-container" class="col-md-12">
-                <div id="map"></div>
+              <br style="clear:both;" />
+
+              <label>Step 2: Geocode your desired address</label>
+              <ul>
+                  <li>1. Type address</li>
+                  <li>2. Geocode with Google API</li>
+              </ul>
+              <input id="input_address" type="text" class="form-control" value="3553 Mayfair Avenue, Vancouver BC" placeholder="Input address here">
+              <button id="loadaddress" type="button" class="btn btn-default btn-block" onclick="loadAddress()">Geocode your address</button>
+              <br />
+
+              <br style="clear:both;" />
+
+
+              <label>Step 3: Find the local area that your address belongs to</label>
+              <input id="search_coord" type="text" class="form-control" value="Input custom geocoordinate [long,lat]" placeholder="Input custom geocoordinate [long, lat]">
+              <button id="findhood" type="button" class="btn btn-default btn-block" onclick="findHood()">Find your local area!</button>
+              <br />
+
+              <br style="clear:both;" />
             </div>
 
-            <!-- neighbourhood result -->
-            <h1 id="neighbourhood" style="text-align:center"></h1>
-            <br />
+            <!-- The results(right side)-->
+            <div class="col-sm-6">
 
-            <!-- steps -->
-            <label>Step 1: Load in local area boundaries (KML file format)</label>
-            <p>The local area boundaries can be found in KML, SHP and Google Map format
-              at the <a href="http://data.vancouver.ca/datacatalogue/localAreaBoundary.htm">
-                City of Vancouver Open Data portal</a>
-            </p>
-            <ul>
-                <li>1. Upload KML file</li>
-                <li>2. Convert to geojson</li>
-            </ul>
-            <input id="kml_link" type="text" class="form-control" value="https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml" placeholder="https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml">
-            <button id="loadboundaries" type="button" class="btn btn-default btn-block" onclick="loadBoundaries()">Load Boundaries</button>
-            <br />
+                <!-- The app -->
+                <div id="appframe">
+                    <!-- map -->
+                    <div id="map-container" class="col-md-12">
+                        <div id="map"></div>
+                    </div>
+                    <!-- neighbourhood result -->
+                    <h1 id="neighbourhood" style="text-align:center"></h1>
+                    <br />
 
-            <br style="clear:both;" />
-
-            <label>Step 2: Geocode address</label>
-            <ul>
-                <li>1. Type address</li>
-                <li>2. Geocode with DataBC geocoder</li>
-            </ul>
-            <input id="input_address" type="text" class="form-control" value="3553 Mayfair Avenue, Vancouver BC" placeholder="Input address here">
-            <button id="loadaddress" type="button" class="btn btn-default btn-block" onclick="loadAddress()">Load Address</button>
-            <br />
-
-            <br style="clear:both;" />
-
-
-            <label>Step 3: Check if within</label>
-            <input id="search_coord" type="text" class="form-control" value="Input custom geocoordinate [long,lat]" placeholder="Input custom geocoordinate [long, lat]">
-            <button id="findhood" type="button" class="btn btn-default btn-block" onclick="findHood()">Check if address is within boundary 1</button>
-            <br />
-
-            <br style="clear:both;" />
+                </div>
+            </div>
 
         </div>
-
 
 
         <!-- Footer -->
@@ -151,7 +157,6 @@
 
     <!-- Custom scripts -->
     <script src="js/custom_funcs.js"></script>
-
 
 
 
