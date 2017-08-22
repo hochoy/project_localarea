@@ -58,7 +58,7 @@
     <!-- Page Content -->
     <div class="container">
 
-        <!-- Portfolio Item Heading -->
+        <!-- Main Content heading -->
         <div class="row">
             <div class="col-lg-12">
                 <h1 class="page-header">Convert Vancouver Address to Local Area
@@ -67,26 +67,40 @@
         </div>
         <!-- /.row -->
 
+
+        <!-- Main Content description -->
+        <div class="row">
+            <div class="col-sm-4">
+              <p id="description">
+                By typing in <b> a street address </b> or <b>name of a place</b>, this web app allows you to identify the local area to which
+                that address belongs to.
+                <br/>
+                <br/>
+                I made the app after the <a href="https://www.opendatabc.ca/blog/2017-vancouver-open-data-day-results">
+                 2017 Vancouver Open Data hackathon </a> after hearing from Linda Low (City of Vancouver's open data coordinator) that some past open data users have
+                requested this service.
+                <br/>
+                <br/>
+                The app currently only works properly for Vancouver addresses. If you want to use it
+                on another city/area, just input a new shapefile in Step 2. The next step is to prepare the app for
+                batch conversion, I am still waiting for DataBC's geocoder apikey :).
+              </p>
+            </div>
+
+            <div class="col-sm-8">
+              <img src="img/pipeline.png" style="width:100%">
+            </div>
+
+        </div>
+
+        <hr/>
+
+
         <!-- The App -->
         <div class="row">
             <div class="col-sm-6">
 
-              <!-- The data loading steps (left side)-->
-              <label>Step 1: Load in local area boundaries (KML file format)</label>
-              <br/>
-              <small>The local area boundaries.KML file can be found at the <a href="http://data.vancouver.ca/datacatalogue/localAreaBoundary.htm">
-                  City of Vancouver Open Data portal</a>
-              </small>
-              
-              <!-- City of Vancouver open data portal is not set up for CORS -->
-              <!-- <input id="kml_link" type="text" class="form-control" value="http://data.vancouver.ca/download/kml/cov_localareas.kml"> -->
-              <input id="kml_link" type="text" class="form-control" value="https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml" placeholder="https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml">
-              <button id="loadboundaries" type="button" class="btn btn-default btn-block" onclick="loadBoundaries()">Load Boundaries</button>
-              <br />
-
-              <br style="clear:both;" />
-
-              <label>Step 2: Geocode your desired address</label>
+              <label>Step 1: Geocode your desired address</label>
               <ul>
                   <li>1. Type address</li>
                   <li>2. Geocode with Google API</li>
@@ -97,8 +111,27 @@
 
               <br style="clear:both;" />
 
+              <!-- The data loading steps (left side)-->
+              <label>Step 2: Load in local area boundaries (KML file format)</label>
+              <br/>
+              <small>The local area boundaries.KML file can be found at the <a href="http://data.vancouver.ca/datacatalogue/localAreaBoundary.htm">
+                  City of Vancouver Open Data portal</a>
+              </small>
+
+              <!-- City of Vancouver open data portal is not set up for CORS -->
+              <!-- <input id="kml_link" type="text" class="form-control" value="http://data.vancouver.ca/download/kml/cov_localareas.kml"> -->
+              <input id="kml_link" type="text" class="form-control" value="https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml" placeholder="https://raw.githubusercontent.com/hochoy/project_localarea/master/kml/cov_localareas.kml">
+              <button id="loadboundaries" type="button" class="btn btn-default btn-block" onclick="loadBoundaries()">Load Boundaries</button>
+              <br />
+
+              <br style="clear:both;" />
+
 
               <label>Step 3: Find the local area that your address belongs to</label>
+              <br/>
+              <small> Using the <a href="https://github.com/substack/point-in-polygon"> point-in-polygon package by James Halliday </a> that is based
+              on an <a href="https://wrf.ecse.rpi.edu//Research/Short_Notes/pnpoly.html"> algorithm by W. Randolph Franklin</a>,
+                 we calculate whether a point is within a polygon. </small>
               <input id="search_coord" type="text" class="form-control" value="Input custom geocoordinate [long,lat]" placeholder="Input custom geocoordinate [long, lat]">
               <button id="findhood" type="button" class="btn btn-default btn-block" onclick="findHood()">Find your local area!</button>
               <br />
